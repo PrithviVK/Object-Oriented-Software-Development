@@ -1,0 +1,38 @@
+<project name="hw06" basedir="."  default="clean" xmlns:ivy="antlib:org.apache.ivy.ant">
+    <property name="src" location="src" />
+    <property name="bin" location="bin" />
+    <property name="ivy.lib" location="lib" />
+
+    <ivy:retrieve/>
+    <path id="classpath">
+        <pathelement location="bin" />
+        <fileset dir="lib" />
+    </path>
+
+    <target name="init">
+        <mkdir dir="${bin}"/>
+        <mkdir dir="${ivy.lib}"/>
+    </target>
+
+    <target name="compile" depends="init">
+        <javac srcdir="${src}" destdir="${bin}" includeAntRuntime="no">
+            <classpath refid="classpath"/>
+            <include name="edu/umb/cs681/primes/*.java"/>
+        </javac>
+    </target>
+
+    <target name="run" depends="compile">
+        <java classname="edu.umb.cs681.primes.RunnableCancellablePrimeGenerator"
+              classpathref="classpath"
+              fork="true"/>
+        <java classname="edu.umb.cs681.primes.RunnableCancellablePrimeFactorizer"
+              classpathref="classpath"
+              fork="true"/>
+    </target>
+
+    <target name="clean" depends="run">
+        <delete includeemptydirs="true">
+            <fileset dir="${bin}/edu/umb/cs681/primes" includes="*/"/>
+        </delete>
+    </target>
+</project>
